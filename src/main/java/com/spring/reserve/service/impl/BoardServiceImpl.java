@@ -202,7 +202,7 @@ public class BoardServiceImpl implements BoardService {
   }
 
   @Override
-  public Page<BoardDTO> pagingList(Pageable pageable, Map<String, String> params){
+  public Page<BoardDTO> boardList(Pageable pageable, Map<String, String> params){
     int page = pageable.getPageNumber() - 1;
     //int pageLimit = 3;
 

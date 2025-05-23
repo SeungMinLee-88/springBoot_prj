@@ -18,16 +18,6 @@ public class BoardSpecification implements Specification<BoardEntity> {
     public Predicate toPredicate
             (Root<BoardEntity> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 
-/*        if (criteria.getOperation().equalsIgnoreCase(">")) {
-            return builder.greaterThanOrEqualTo(
-                    root.<String> get(criteria.getKey()), criteria.getValue().toString());
-        }
-        else if (criteria.getOperation().equalsIgnoreCase("<")) {
-            return builder.lessThanOrEqualTo(
-                    root.<String> get(criteria.getKey()), criteria.getValue().toString());
-        }
-        else if (criteria.getOperation().equalsIgnoreCase(":")) {*/
-
         if(criteria.getSearchKey() != null){
             if (root.get(criteria.getSearchKey()).getJavaType() == String.class) {
                    return builder.like(
@@ -36,7 +26,6 @@ public class BoardSpecification implements Specification<BoardEntity> {
                   return builder.equal(root.get(criteria.getSearchKey()), criteria.getSearchValue());
             }
         }
-/*        }*/
         return null;
     }
 

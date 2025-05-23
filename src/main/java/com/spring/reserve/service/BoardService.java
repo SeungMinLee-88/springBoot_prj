@@ -33,7 +33,7 @@ public interface BoardService {
 
   void boardDelete(Long id);
 
-  Page<BoardDTO> pagingList(Pageable pageable, Map<String, String> params);
+  Page<BoardDTO> boardList(Pageable pageable, Map<String, String> params);
 
   BoardDTO save(BoardDTO boardDTO) throws IOException ;
 

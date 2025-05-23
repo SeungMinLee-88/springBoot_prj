@@ -132,7 +132,7 @@ public class RestBoardController {
 
     @GetMapping("/boardList")
     public Page<BoardDTO> boardList(@PageableDefault(page = 1) Pageable pageable, @RequestParam Map<String,String> params){
-        Page<BoardDTO> boardList = boardService.pagingList(pageable, params);
+        Page<BoardDTO> boardList = boardService.boardList(pageable, params);
 
         return boardList;
     }
