@@ -15,9 +15,8 @@ public class CustomUserDetails  implements UserDetails {
   private List<String> userRoles;
 
   public CustomUserDetails(UserEntity userEntity, List<String> userRoles) {
-
     this.userEntity = userEntity;
-      this.userRoles = userRoles;
+    this.userRoles = userRoles;
   }
 
 
@@ -26,32 +25,21 @@ public class CustomUserDetails  implements UserDetails {
 
     Collection<GrantedAuthority> collection = new ArrayList<>();
 
-/*    collection.add(new GrantedAuthority() {
-
-      @Override
-      public String getAuthority() {
-        //return "";
-        return userRoles.toString();
-      }
-    });*/
     List<SimpleGrantedAuthority> updatedAuthorities = new ArrayList<SimpleGrantedAuthority>();
     for(int i=0; i < userRoles.size(); i++) {
       SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRoles.get(i));
       collection.add(authority);
     }
-
     return collection;
   }
 
   @Override
   public String getPassword() {
-
     return userEntity.getUserPassword();
   }
 
   @Override
   public String getUsername() {
-
     return userEntity.getUserName();
   }
 

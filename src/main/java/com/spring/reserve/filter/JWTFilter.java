@@ -66,7 +66,7 @@ public class JWTFilter extends OncePerRequestFilter {
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }
-    
+
     String userName = jwtUtil.getUsername(accessToken);
     List<String> userRole = jwtUtil.getRole(accessToken);
 
@@ -78,11 +78,6 @@ public class JWTFilter extends OncePerRequestFilter {
     userRoles = userRole;
 
     CustomUserDetails customUserDetails = new CustomUserDetails(userEntity, userRoles);
-
-    Collection<? extends GrantedAuthority> authorities = customUserDetails.getAuthorities();
-    Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-    GrantedAuthority auth = iterator.next();
-    String role = auth.getAuthority();
 
     Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
     SecurityContextHolder.getContext().setAuthentication(authToken);

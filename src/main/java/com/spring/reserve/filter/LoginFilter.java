@@ -101,19 +101,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 }.getType());
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleDTO.getRoleName());
         updatedAuthorities.add(authority);
-        /*updatedAuthorities.addAll(oldAuthorities);*/
       }
-
 
     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginId, userPassword, updatedAuthorities);
 
-    //token에 담은 검증을 위한 AuthenticationManager로 전달
-    System.out.println("authToken : " + authToken);
     return authenticationManager.authenticate(authToken);
   }
 
-
-  //로그인 실패시 실행하는 메소드
   @Override
   protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
     response.setStatus(401);
@@ -121,48 +115,29 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
   protected void successfulAuthentication (HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
 
-    //유저 정보
     String userName = authentication.getName();
-    //String userId = (String) authentication.getPrincipal();
-/*    String userId = (String) SecurityContextHolder.getContext()
-            .getAuthentication()
-            .getPrincipal();*/
-    System.out.println("successfulAuthentication userName : " + userName);
 
-    System.out.println("successfulAuthentication authentication.getAuthorities() : " + authentication.getAuthorities());
 
     List<String> role = new ArrayList<>();
     Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
     Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
     while ( iterator.hasNext()){
-      //System.out.println("iterator : " + iterator.next());
       role.add(String.valueOf(iterator.next()));
     }
-    //GrantedAuthority auth = iterator.next();
-/*    List<String> role = auth.getAuthority();*/
 
-    System.out.println("successfulAuthentication role : " + role);
-
-    //토큰 생성
-    /*String access = jwtUtil.createJwt("access", username, role, 20000L);*/
-    /*String access = jwtUtil.createJwt("access", username, role, 600000L);*/
     /*
     100000L 20000L 600000L 86400000L
     */
     String access = jwtUtil.createJwt("access", userName, role, 86400000L);
     String refresh = jwtUtil.createJwt("refresh", userName, role, 86400000L);
-
-    //Refresh 토큰 저장
     addRefreshEntity(userName, refresh, 20000L);
 
-    //응답 설정
     response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, userName, Response-Header, access" );
     response.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS" );
     response.setHeader("Access-Control-Allow-Origin", "localhost:3000" );
     response.setHeader("Access-Control-Expose-Headers", "userName, access" );
     response.setHeader("access", access );
     response.setHeader("userName", userName );
-
     response.addCookie(createCookie("refresh", refresh));
     response.setStatus(HttpStatus.OK.value());
   }
@@ -170,13 +145,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
   private void addRefreshEntity(String username, String refresh, Long expiredMs) {
 
     Date date = new Date(System.currentTimeMillis() + expiredMs);
-    System.out.println("addRefreshEntity expiredMs : " + expiredMs);
-
     RefreshEntity refreshEntity = new RefreshEntity();
     refreshEntity.setUsername(username);
     refreshEntity.setRefresh(refresh);
     refreshEntity.setExpiration(date.toString());
-    System.out.println("addRefreshEntity date : " + date);
 
     refreshRepository.save(refreshEntity);
   }
@@ -185,31 +157,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     Cookie cookie = new Cookie(key, value);
     cookie.setMaxAge(24*60*60);
-    //cookie.setSecure(true);
-    //cookie.setPath("/");
     cookie.setHttpOnly(true);
 
     return cookie;
   }
 }
-
-//로그인 성공시 실행하는 메소드 (여기서 JWT를 발급하면 됨)
- /* @Override
-  protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
-    System.out.println("successfulAuthentication success");
-
-    //UserDetailsS
-    CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-
-    String username = customUserDetails.getUsername();
-
-    Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-    Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-    GrantedAuthority auth = iterator.next();
-
-    String role = auth.getAuthority();
-
-    String token = jwtUtil.createJwt(username, role, 600*600*10L);
-
-    response.addHeader("Authorization", "Bearer " + token);
-  }*/
