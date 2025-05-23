@@ -1,0 +1,75 @@
+server:
+  port: 8090
+around:
+  hub:
+    short:
+      url:
+        id: '"E1KSH4XDjVDAVGHNjVzm";'
+        secret: '"0GWzpWTm_I";'
+spring:
+  jwt:
+    secret: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-z
+  redis:
+    host: localhost
+    port: '6379'
+  application:
+    name: springboot
+  datasource:
+    driverClassName: org.mariadb.jdbc.Driver
+    #    password: ENC(n1EF6di0hk+MxXUlo9T1cA==)
+    #    username: ENC(80s5/ObtRtZpmX2VhJXx3Q==)
+    password: 123qwe
+    username: root
+    url: jdbc:mariadb://localhost:3306/shop
+    hikari:
+      auto-commit: true
+  profiles:
+    active: old
+  jpa:
+    hibernate:
+      #ddl-auto: create update
+      ddl-auto: update
+    show-sql: 'true'
+    properties:
+      hibernate:
+        format_sql: 'true'
+  config:
+    use-legacy-processing: 'true'
+logging:
+  level:
+    root: debug
+    web: info
+    org.springframework:
+      security: DEBUG
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+
+springdoc:
+  swagger-ui: path=/swagger-ui.html
+#springdoc:
+#  api-docs:
+#    path: /api-docs
+#  default-consumes-media-type: application/json
+#  default-produces-media-type: application/json
+#  swagger-ui:
+#    enabled: true
+#    operations-sorter: alpha
+#    tags-sorter: alpha
+#    path: /swagger-ui.html
+#    disable-swagger-default-url: true
+#    display-query-params-without-oauth2: true
+#    doc-expansion: none
+#  paths-to-match:
+#    - /api/**
+board:
+  client:
+    kakao: ${external_a_baseurl:apikey}
+    api-secret: apiSecret
+    base-url: 'http://naver.com'
+    connection-timeout: 100000
+    response-timeout: 100000
+    read-timeout: 100000
+    write-timeout: 100000
+    idle-timeout-seconds: 6000
