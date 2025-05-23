@@ -43,7 +43,6 @@ public class BoardDTO {
     BoardDTO boardDTO = new BoardDTO();
     boardDTO.setId(boardEntity.getId());
     boardDTO.setBoardWriter(boardEntity.getBoardWriter());
-/*    boardDTO.setBoardPass(boardEntity.getBoardPass());*/
     boardDTO.setBoardTitle(boardEntity.getBoardTitle());
     boardDTO.setBoardContents(boardEntity.getBoardContents());
     boardDTO.setBoardHits(boardEntity.getBoardHits());
@@ -53,15 +52,6 @@ public class BoardDTO {
       boardDTO.setFileAttached(boardEntity.getFileAttached()); // 0
     } else {
       boardDTO.setFileAttached(boardEntity.getFileAttached());
-/*      List<String> originalFileNameList = new ArrayList<>();
-      List<String> storedFileNameList = new ArrayList<>();
-      boardDTO.setFileAttached(boardEntity.getFileAttached()); // 1
-      for (BoardFileEntity boardFileEntity : boardEntity.getBoardFileEntityList()){
-        originalFileNameList.add(boardFileEntity.getOriginalFileName());
-        storedFileNameList.add(boardFileEntity.getStoredFileName());
-      }
-      boardDTO.setOriginalFileName(originalFileNameList);
-      boardDTO.setStoredFileName(storedFileNameList);*/
     }
 
     return boardDTO;

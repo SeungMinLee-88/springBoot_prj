@@ -21,11 +21,8 @@ public class BoardEntity extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
   private Long id;
 
-  @Column(length = 20, nullable = false) // 크기 20, not null
+  @Column(length = 20, nullable = false)
   private String boardWriter;
-
-/*  @Column // 크기 255, null 가능
-  private String boardPass;*/
 
   @Column
   private String boardTitle;
@@ -37,27 +34,18 @@ public class BoardEntity extends BaseEntity {
   private int boardHits;
 
   @Column
-  private int fileAttached; // 1 or 0
+  private int fileAttached;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
   @JsonIgnore
   private UserEntity userEntity;
 
+  @OneToMany(mappedBy = "boardEntity", cascade = CascadeType.REMOVE, orphanRemoval = false, fetch = FetchType.LAZY)
+  private final List<BoardFileEntity> boardFileEntityList = new ArrayList<>();
 
   @OneToMany(mappedBy = "boardEntity", cascade = CascadeType.REMOVE, orphanRemoval = false, fetch = FetchType.LAZY)
-  private List<BoardFileEntity> boardFileEntityList = new ArrayList<>();
-
-  @OneToMany(mappedBy = "boardEntity", cascade = CascadeType.REMOVE, orphanRemoval = false, fetch = FetchType.LAZY)
-  private List<CommentEntity> commentEntityList = new ArrayList<>();
-
-  @Data
-  public class SearchCriteria {
-
-    private String searchKey;
-    private String searchValue;
-  }
-
+  private final List<CommentEntity> commentEntityList = new ArrayList<>();
 
   public static BoardEntity toSaveEntity(BoardDTO boardDTO) {
     return BoardEntity.builder()

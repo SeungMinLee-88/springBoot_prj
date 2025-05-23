@@ -1,6 +1,7 @@
 package com.spring.reserve.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +9,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Builder
 @Table(name = "board_file_table")
 public class BoardFileEntity {
   @Id
@@ -28,11 +30,17 @@ public class BoardFileEntity {
   private BoardEntity boardEntity;
 
   public static BoardFileEntity toBoardFileEntity(BoardEntity boardEntity, String originalFileName, String storedFileName, String contentType) {
-    BoardFileEntity boardFileEntity = new BoardFileEntity();
+/*    BoardFileEntity boardFileEntity = new BoardFileEntity();
     boardFileEntity.setOriginalFileName(originalFileName);
     boardFileEntity.setStoredFileName(storedFileName);
     boardFileEntity.setMimeType(contentType);
     boardFileEntity.setBoardEntity(boardEntity);
-    return boardFileEntity;
+    return boardFileEntity;*/
+    return BoardFileEntity.builder()
+            .originalFileName(originalFileName)
+            .storedFileName(storedFileName)
+            .mimeType(contentType)
+            .boardEntity(boardEntity)
+            .build();
   }
 }

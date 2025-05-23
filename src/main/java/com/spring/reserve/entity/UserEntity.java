@@ -16,9 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "user")
 public class UserEntity extends BaseEntity {
-/*  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;*/
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,10 +26,10 @@ public class UserEntity extends BaseEntity {
   private String userPassword;
 
   @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE, orphanRemoval = false, fetch = FetchType.LAZY)
-  private List<CommentEntity> commentEntityList = new ArrayList<>();
+  private final List<CommentEntity> commentEntityList = new ArrayList<>();
 
   @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE, orphanRemoval = false, fetch = FetchType.LAZY)
-  private List<BoardEntity> boardEntityList = new ArrayList<>();
+  private final List<BoardEntity> boardEntityList = new ArrayList<>();
 
   @JsonIgnore
   @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -41,7 +38,6 @@ public class UserEntity extends BaseEntity {
   @JsonIgnore
   @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
   private final List<RoleUserEntity> roleUserEntities = new ArrayList<>();
-
 
   public static UserEntity toSaveEntity(UserDto userDto) {
     return UserEntity.builder()

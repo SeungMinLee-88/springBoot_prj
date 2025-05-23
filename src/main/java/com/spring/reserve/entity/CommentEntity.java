@@ -56,7 +56,7 @@ public class CommentEntity extends BaseEntity {
   private CommentEntity rootCommentEntity;
 
   @Transient
-  public List<CommentEntity> childrenComments = new ArrayList<CommentEntity>();
+  public final List<CommentEntity> childrenComments = new ArrayList<CommentEntity>();
 
   public static CommentEntity toSaveEntity(CommentDTO commentDTO, BoardEntity boardEntity, CommentEntity parentCommentEntity, CommentEntity rootCommentEntity) {
     CommentEntity commentEntity = new CommentEntity();

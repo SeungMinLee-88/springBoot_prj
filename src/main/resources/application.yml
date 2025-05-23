@@ -48,28 +48,6 @@ jasypt:
 
 springdoc:
   swagger-ui: path=/swagger-ui.html
-#springdoc:
-#  api-docs:
-#    path: /api-docs
-#  default-consumes-media-type: application/json
-#  default-produces-media-type: application/json
-#  swagger-ui:
-#    enabled: true
-#    operations-sorter: alpha
-#    tags-sorter: alpha
-#    path: /swagger-ui.html
-#    disable-swagger-default-url: true
-#    display-query-params-without-oauth2: true
-#    doc-expansion: none
-#  paths-to-match:
-#    - /api/**
-board:
-  client:
-    kakao: ${external_a_baseurl:apikey}
-    api-secret: apiSecret
-    base-url: 'http://naver.com'
-    connection-timeout: 100000
-    response-timeout: 100000
-    read-timeout: 100000
-    write-timeout: 100000
-    idle-timeout-seconds: 6000
+
+reserve:
+    save-path: C:/Users/lsmls/IdeaProjects/springBoot_prj/attached/
