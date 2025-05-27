@@ -21,7 +21,7 @@ import java.util.List;
 public class RoleEntity {
 
     @Id // pk 컬럼 지정. 필수
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Long roleId;

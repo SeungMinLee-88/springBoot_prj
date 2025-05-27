@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name = "reserve")
 public class ReserveEntity extends BaseEntity {
   @Id // pk 컬럼 지정. 필수
-  @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   private String reserveReason;

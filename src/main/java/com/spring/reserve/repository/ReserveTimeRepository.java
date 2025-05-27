@@ -12,5 +12,4 @@ public interface ReserveTimeRepository extends JpaRepository<ReserveTimeEntity, 
             , countQuery = "select count(*) from reserve_time where reserve_date = :reserveDate"
             ,nativeQuery = true)
     List<ReserveTimeEntity> findByReserveDate(String reserveDate);
-    //List<ReserveTimeEntity> findByReserveDate(String reserveDate);
 }

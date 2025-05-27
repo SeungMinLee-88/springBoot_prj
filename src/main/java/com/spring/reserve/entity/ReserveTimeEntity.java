@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "reserve_time")
 public class ReserveTimeEntity extends BaseEntity {
     @Id // pk 컬럼 지정. 필수
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "role_user")
 public class RoleUserEntity extends BaseEntity {
     @Id // pk 컬럼 지정. 필수
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

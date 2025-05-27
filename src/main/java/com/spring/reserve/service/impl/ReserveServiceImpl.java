@@ -30,7 +30,7 @@ public class ReserveServiceImpl implements ReserveService {
     @Override
     public ReserveDTO reserveSave(ReserveDTO reserveDTO) throws IOException {
 
-        System.out.println("reserveSave reserveDTO : " + reserveDTO);
+
         Optional<UserEntity> optionalUserEntity = Optional.ofNullable(userRepository.findByLoginId(reserveDTO.getReserveUserId()));
         Optional<HallEntity> optionalHallEntity = hallRepository.findById(reserveDTO.getHallId());
         if (optionalUserEntity.isPresent() && optionalHallEntity.isPresent()) {
@@ -44,17 +44,15 @@ public class ReserveServiceImpl implements ReserveService {
                 System.out.println("timeDtoList : " + reserveDTO.getReserveTimeSave().get(i));
                 TimeEntity timeEntity = timeRepository.findById(reserveDTO.getReserveTimeSave() .get(i)).get();
                 ReserveTimeEntity reserveTimeEntity = ReserveTimeEntity.toSaveEntity(reserveEntity, timeEntity,reserveDTO);
-                ReserveTimeEntity reserveTimeEntitys = reserveTimeRepository.save(reserveTimeEntity);
+                reserveTimeRepository.save(reserveTimeEntity);
             }
             ModelMapper mapper = new ModelMapper();
 
-            System.out.println("reserveEntitys : " + reserveEntitys.toString());
             ReserveDTO reserveDTO1  = mapper.map(reserveEntitys, new TypeToken<ReserveDTO>(){}.getType());
 
             return reserveDTO1;
 
         } else {
-            System.out.println("null case!!!!!!!!");
             return null;
         }
     }
@@ -70,22 +68,18 @@ public class ReserveServiceImpl implements ReserveService {
             ReserveEntity reserveEntity = ReserveEntity.toSaveEntity(reserveDTO, userEntity, hallEntity);
             ReserveEntity reserveEntitys = reserveRepository.save(reserveEntity);
 
-            //List<ReserveTimeDTO> timeDtoList = reserveDTO.getReserveTime();
             for(int i = 0; i < reserveDTO.getReserveTimeSave().size(); i++) {
-                System.out.println("timeDtoList : " + reserveDTO.getReserveTimeSave().get(i));
                 TimeEntity timeEntity = timeRepository.findById(reserveDTO.getReserveTimeSave() .get(i)).get();
                 ReserveTimeEntity reserveTimeEntity = ReserveTimeEntity.toSaveEntity(reserveEntity, timeEntity,reserveDTO);
-                ReserveTimeEntity reserveTimeEntitys = reserveTimeRepository.save(reserveTimeEntity);
+                reserveTimeRepository.save(reserveTimeEntity);
             }
             ModelMapper mapper = new ModelMapper();
 
-            System.out.println("reserveEntitys : " + reserveEntitys.toString());
             ReserveDTO reserveDTO1  = mapper.map(reserveEntitys, new TypeToken<ReserveDTO>(){}.getType());
 
             return reserveDTO1;
 
         } else {
-            System.out.println("update null case!!!!!!!!");
             return null;
         }
     }
@@ -93,18 +87,11 @@ public class ReserveServiceImpl implements ReserveService {
     @Override
     @Transactional
     public List<ReserveDTO> reserveList(ReserveDTO reserveDTO) {
-        System.out.println("reserveList reserveDTO : " + reserveDTO);
         List<ReserveEntity> reserveEntityList = reserveRepository.findByReserveDateContainingAndReserveUserIdContaining(reserveDTO.getReserveDate(), reserveDTO.getReserveUserId());
 
-        for(int i = 0; i < reserveEntityList.size(); i++) {
-            System.out.println("reserveEntityList : " + reserveEntityList.get(i).getReserveTimeEntity().toString());
-        }
 
         ModelMapper mapper = new ModelMapper();
         List<ReserveDTO> reserveDTOList  = mapper.map(reserveEntityList, new TypeToken<List<ReserveDTO>>(){}.getType());
-        for(int i = 0; i < reserveDTOList.size(); i++) {
-            System.out.println("getReserveTime : " + mapper.map(reserveEntityList.get(i).getReserveTimeEntity(), new TypeToken<List<ReserveTimeDTO>>(){}.getType()));
-        }
 
         List<ReserveDTO> reserveDTOList2 = mapper.map(reserveEntityList, new TypeToken<List<ReserveDTO>>(){}.getType());
 
@@ -128,7 +115,6 @@ public class ReserveServiceImpl implements ReserveService {
     @Override
     @Transactional
     public List<ReserveTimeDTO> reserveTimeList(ReserveTimeDTO reserveTimeDTO) {
-        System.out.println("reserveTimeList reserveTimeDTO : " + reserveTimeDTO);
         List<ReserveTimeEntity> reserveTimeEntityList = reserveTimeRepository.findByReserveDate(reserveTimeDTO.getReserveDate());
         ModelMapper mapper = new ModelMapper();
         List<ReserveTimeDTO> reserveDTOList2 = mapper.map(reserveTimeEntityList, new TypeToken<List<ReserveTimeDTO>>(){}.getType());
@@ -138,12 +124,10 @@ public class ReserveServiceImpl implements ReserveService {
     @Override
     @Transactional
     public List<TimeDto> timeList(Map<String, String> params) {
-        System.out.println("params.get : " + params.get("reserveDate"));
-        System.out.println("reserveDate : " + params.get("reserveDate"));
         List<TimeEntity> timeEntityList = timeRepository.findByReserveDate(params.get("reserveDate"));
         ModelMapper mapper = new ModelMapper();
         List<TimeDto> timeDtoList = mapper.map(timeEntityList, new TypeToken<List<TimeDto>>(){}.getType());
-        System.out.println("timeDtoList : " + timeDtoList);
+
         return timeDtoList;
     }
 

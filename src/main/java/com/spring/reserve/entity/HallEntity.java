@@ -19,7 +19,7 @@ import java.util.List;
 @Table(name = "hall")
 public class HallEntity {
     @Id // pk 컬럼 지정. 필수
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String hallName;

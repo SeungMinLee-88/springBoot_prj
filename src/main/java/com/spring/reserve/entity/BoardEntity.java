@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name = "board")
 public class BoardEntity extends BaseEntity {
   @Id // pk 컬럼 지정. 필수
-  @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @Column(length = 20, nullable = false)
