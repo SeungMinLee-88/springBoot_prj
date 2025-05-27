@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "role_user")
 public class RoleUserEntity extends BaseEntity {
-    @Id // pk 컬럼 지정. 필수
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

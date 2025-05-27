@@ -14,7 +14,7 @@ import java.util.Map;
 public interface ReserveService {
 
 
-    ReserveDTO reserveSave(ReserveDTO reserveDTO) throws IOException;
+    ReserveDTO reserveSave(ReserveDTO reserveDTO);
 
     ReserveDTO updateReserve(ReserveDTO reserveDTO);
 
@@ -28,6 +28,6 @@ public interface ReserveService {
 
     ReserveDTO convertToDto(ReserveEntity reserveEntity);
 
-    void deleteReserve(ReserveDTO reserveDTO) throws IOException;
+    void deleteReserve(ReserveDTO reserveDTO);
 
 }

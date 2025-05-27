@@ -30,7 +30,6 @@ public class RestBoardController {
 
     @PostMapping("/boardSave")
     public ResponseEntity<BoardPostResponse> boardSave(@RequestParam("boardTitle") String boardTitle, @RequestParam("boardWriter") String boardWriter, @RequestParam("boardContents") String boardContents, @RequestParam(name="boardFile", required = false) MultipartFile[] boardFile) throws IOException {
-
         BoardDTO boardDTO = new BoardDTO();
         boardDTO.setBoardTitle(boardTitle);
         boardDTO.setBoardWriter(boardWriter);
@@ -65,8 +64,8 @@ public class RestBoardController {
 
     @GetMapping("/fileList/{boardId}")
     public List<BoardFileDTO> fileList(@PathVariable Long boardId, HttpServletRequest request) {
-
             List<BoardFileDTO> boardFileDTOList = boardService.fileList(boardId);
+
             return boardFileDTOList;
     }
 

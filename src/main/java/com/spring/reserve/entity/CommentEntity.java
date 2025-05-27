@@ -51,19 +51,20 @@ public class CommentEntity extends BaseEntity {
   public final List<CommentEntity> childrenComments = new ArrayList<CommentEntity>();
 
   public static CommentEntity toSaveEntity(CommentDTO commentDTO, BoardEntity boardEntity, CommentEntity parentCommentEntity, CommentEntity rootCommentEntity) {
-    CommentEntity commentEntity = new CommentEntity();
-    commentEntity.setCommentWriter(commentDTO.getCommentWriter());
-    commentEntity.setCommentContents(commentDTO.getCommentContents());
-    commentEntity.setBoardEntity(boardEntity);
-    commentEntity.setParentCommentEntity(parentCommentEntity);
-    commentEntity.setRootCommentEntity(rootCommentEntity);
-    return commentEntity;
+    return CommentEntity.builder()
+            .commentWriter(commentDTO.getCommentWriter())
+            .commentContents(commentDTO.getCommentContents())
+            .boardEntity(boardEntity)
+            .parentCommentEntity(parentCommentEntity)
+            .rootCommentEntity(rootCommentEntity)
+            .build();
+
   }
 
   public static CommentEntity toUpdateEntity(CommentDTO commentDTO) {
-    CommentEntity commentEntity = new CommentEntity();
-    commentEntity.setId(commentDTO.getId());
-    commentEntity.setCommentContents(commentDTO.getCommentContents());
-    return commentEntity;
+    return CommentEntity.builder()
+            .commentWriter(commentDTO.getCommentWriter())
+            .commentContents(commentDTO.getCommentContents())
+            .build();
   }
 }

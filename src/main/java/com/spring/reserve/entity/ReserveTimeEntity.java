@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "reserve_time")
 public class ReserveTimeEntity extends BaseEntity {
-    @Id // pk 컬럼 지정. 필수
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -28,7 +28,6 @@ public class ReserveTimeEntity extends BaseEntity {
     private TimeEntity timeEntity;
 
     private String reserveDate;
-
 
     public static ReserveTimeEntity toSaveEntity(ReserveEntity reserveEntity, TimeEntity timeEntity, ReserveDTO reserveDTO) {
         return ReserveTimeEntity.builder()

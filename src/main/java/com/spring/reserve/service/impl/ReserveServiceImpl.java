@@ -28,7 +28,7 @@ public class ReserveServiceImpl implements ReserveService {
 
 
     @Override
-    public ReserveDTO reserveSave(ReserveDTO reserveDTO) throws IOException {
+    public ReserveDTO reserveSave(ReserveDTO reserveDTO){
 
 
         Optional<UserEntity> optionalUserEntity = Optional.ofNullable(userRepository.findByLoginId(reserveDTO.getReserveUserId()));
@@ -139,7 +139,7 @@ public class ReserveServiceImpl implements ReserveService {
     }
 
     @Override
-    public void deleteReserve(ReserveDTO reserveDTO) throws IOException {
+    public void deleteReserve(ReserveDTO reserveDTO){
         reserveRepository.deleteById(reserveDTO.getId());
     }
 

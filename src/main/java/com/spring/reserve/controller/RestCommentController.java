@@ -72,15 +72,14 @@ public class RestCommentController {
     }
 
     @PostMapping("/commentSave")
-    public ResponseEntity<String> commentSave(@RequestBody CommentDTO commentDTO) throws IOException {
-
+    public ResponseEntity<String> commentSave(@RequestBody CommentDTO commentDTO){
         commentService.commentSave(commentDTO);
         return ResponseEntity.status(HttpStatus.OK).body("save success");
     }
 
     @Transactional
     @PostMapping("/commentUpdate")
-    public ResponseEntity<String> commentUpdate(@RequestBody CommentDTO commentDTO) throws IOException {
+    public ResponseEntity<String> commentUpdate(@RequestBody CommentDTO commentDTO) {
         CommentEntity updateCommentEntity = CommentEntity.toUpdateEntity(commentDTO);
         updateCommentEntity.setCommentContents(commentDTO.getCommentContents());
         commentRepository.updateCommentContents(commentDTO.getCommentContents(), commentDTO.getId());

@@ -93,17 +93,11 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Page<UserDto> userList(Pageable pageable, Map<String, String> params) {
-
     int page = pageable.getPageNumber() - 1;
-    int pageLimit = 3;
-    Specification<UserEntity> specification = new UserSpecification(new SearchCriteria(params.get("searchKey"), params.get("searchValue")));
-    /*Page<UserEntity> userEntityList = userRepository.findAllWithPageble(specification, PageRequest.of(page, 3));*/
-    Page<UserEntity> userEntityList = userRepository.findAll(specification, PageRequest.of(page, 3));
 
-    /*Page<UserEntity> userEntityList = userRepository.findAllWithPageble(PageRequest.of(page, 3));
-    ModelMapper mapper = new ModelMapper();
-    Page<UserDto> userDtoList = mapper.map(userEntityList, new TypeToken<Page<UserDto>>() {
-    }.getType());*/
+    Specification<UserEntity> specification = new UserSpecification(new SearchCriteria(params.get("searchKey"), params.get("searchValue")));
+
+    Page<UserEntity> userEntityList = userRepository.findAll(specification, PageRequest.of(page, Integer.parseInt(params.get("size"))));
 
     ModelMapper mapper = new ModelMapper();
     Page<UserDto> userDtoList = userEntityList.map(user -> new UserDto(user.getId(), user.getLoginId(), user.getUserName(), user.getUserPassword(), mapper.map(roleUserRepository.findByUserEntity(user)
@@ -120,7 +114,6 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserDto userDetail(UserDto userDto) {
 
-    /*Page<UserEntity> userEntityList = userRepository.findAllWithPageble(specification, PageRequest.of(page, 3));*/
     Optional<UserEntity> userEntityOptional = userRepository.findById(userDto.getId());
 
     if(userEntityOptional.isPresent()){

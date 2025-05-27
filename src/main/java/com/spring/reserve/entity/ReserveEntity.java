@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "reserve")
 public class ReserveEntity extends BaseEntity {
-  @Id // pk 컬럼 지정. 필수
+  @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 

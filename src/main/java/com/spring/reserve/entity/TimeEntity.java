@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "time")
 public class TimeEntity{
-  @Id // pk 컬럼 지정. 필수
+  @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 

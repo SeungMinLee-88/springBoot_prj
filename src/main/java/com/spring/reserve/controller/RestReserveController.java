@@ -21,7 +21,7 @@ public class RestReserveController {
     private final ReserveService reserveService;
 
     @PutMapping("/save")
-    public ResponseEntity<ReserveEntity> reserveSave(@RequestBody ReserveDTO reserveDTO) throws IOException {
+    public ResponseEntity<ReserveEntity> reserveSave(@RequestBody ReserveDTO reserveDTO) {
 
         ReserveDTO reserveDTO1 = reserveService.reserveSave(reserveDTO);
         return ResponseEntity.ok(ReserveEntity.builder().id(reserveDTO1.getId()).build());
@@ -71,7 +71,7 @@ public class RestReserveController {
     }
 
     @DeleteMapping("/deleteReserve")
-    public ResponseEntity<ReserveDTO> deleteReserve(@RequestBody ReserveDTO reserveDTO) throws IOException {
+    public ResponseEntity<ReserveDTO> deleteReserve(@RequestBody ReserveDTO reserveDTO){
         reserveService.deleteReserve(reserveDTO);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(reserveDTO);
     }

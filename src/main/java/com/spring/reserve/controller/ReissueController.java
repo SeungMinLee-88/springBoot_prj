@@ -30,8 +30,6 @@ public class ReissueController {
 
     @PostMapping("/reIssueToken")
     public ResponseEntity<?> reIssueToken(HttpServletRequest request, HttpServletResponse response) {
-
-
         String refresh = null;
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
