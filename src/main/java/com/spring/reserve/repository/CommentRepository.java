@@ -11,14 +11,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
-  // select * from comment_table where board_id=? order by id desc;
-/*  List<CommentEntity> findAllByBoardEntityOrderByIdDesc(BoardEntity boardEntity);
-
-  List<CommentEntity> findByBoardEntity(BoardEntity boardEntity);*/
-
-
-  //List<CommentEntity> findByBoardEntityAndCommentEntityIsNull(BoardEntity boardEntity);
-
   @Query("SELECT commentEntity FROM CommentEntity commentEntity "
           + " WHERE commentEntity.parentCommentEntity.id IS NULL")
   public Page<CommentEntity> findAllRoots(@Param("boardId") Long boardId, PageRequest pageRequest);

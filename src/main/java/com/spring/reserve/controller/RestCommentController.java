@@ -32,16 +32,6 @@ public class RestCommentController {
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
 
-   /* @GetMapping("/commentList")
-    public List<CommentDTO> commentList(@RequestParam Long boardId) {
-        System.out.println("boardId : " + boardId);
-        // DB에서 전체 게시글 데이터를 가져와서 list.html에 보여준다.
-        List<CommentDTO> commentDTOList = commentService.commentList(boardId);
-        System.out.println("commentDTOList : " + commentDTOList.toString());
-        //model.addAttribute("boardList", boardDTOList);
-        return commentDTOList;
-    }*/
-
     @GetMapping("/commentList")
     @Transactional(readOnly = true)
     public Page<CommentEntity> commentTrees(@PageableDefault(page = 1) Pageable pageable, @RequestParam Long boardId) {
@@ -49,24 +39,20 @@ public class RestCommentController {
         int pageLimit = 3;
 
         BoardEntity boardEntity = boardRepository.findById(boardId).get();
-        /*Page<CommentEntity> rootCommentEntity = commentRepository.findAllRoots(boardId, PageRequest.of(page, pageable.getPageSize())); // first db call*/
         Page<CommentEntity> rootCommentEntity = commentRepository.findByBoardEntityAndParentCommentEntityIsNull(boardEntity, PageRequest.of(page, pageable.getPageSize()));
 
 
-        // Now Find all the subcategories
         List<Long> rootCommentIds = rootCommentEntity.stream().map(CommentEntity::getId).collect(Collectors.toList());
-        List<CommentEntity> subComments = commentRepository.findAllSubCommentEntitysInRoot(rootCommentIds); // second db call
+        List<CommentEntity> subComments = commentRepository.findAllSubCommentEntitysInRoot(rootCommentIds);
 
         subComments.forEach(subComment -> {
-            subComment.getParentCommentEntity().getChildrenComments().add(subComment); // no further db call, because everyone inside the root is in the persistence context.
+            subComment.getParentCommentEntity().getChildrenComments().add(subComment); // no
         });
-        System.out.println("rootCommentEntity : " + rootCommentEntity.getContent());
 
         ModelMapper mapper = new ModelMapper();
 
         List<CommentDTO> rootCommentDTOList = mapper.map(rootCommentEntity.getContent(), new TypeToken<List<CommentDTO>>() {
         }.getType());
-        //System.out.println("aaaaaaaaaa  rootCommentDTOList : " + rootCommentDTOList.toString());
 
         return rootCommentEntity;
     }
@@ -81,15 +67,13 @@ public class RestCommentController {
 
         CommentDTO commentDTO = mapper.map(commentEntity, new TypeToken<CommentDTO>() {
         }.getType());
-        //System.out.println("aaaaaaaaaa  rootCommentDTOList : " + commentDTO.toString());
 
         return commentDTO;
     }
 
     @PostMapping("/commentSave")
     public ResponseEntity<String> commentSave(@RequestBody CommentDTO commentDTO) throws IOException {
-        System.out.println("commentDTO = " + commentDTO);
-        System.out.println("PostMapping commentDTO = " + commentDTO.getIsRootComment());
+
         commentService.commentSave(commentDTO);
         return ResponseEntity.status(HttpStatus.OK).body("save success");
     }
@@ -97,9 +81,6 @@ public class RestCommentController {
     @Transactional
     @PostMapping("/commentUpdate")
     public ResponseEntity<String> commentUpdate(@RequestBody CommentDTO commentDTO) throws IOException {
-        System.out.println("commentUpdate commentDTO = " + commentDTO);
-
-
         CommentEntity updateCommentEntity = CommentEntity.toUpdateEntity(commentDTO);
         updateCommentEntity.setCommentContents(commentDTO.getCommentContents());
         commentRepository.updateCommentContents(commentDTO.getCommentContents(), commentDTO.getId());
