@@ -125,6 +125,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
       role.add(String.valueOf(iterator.next()));
     }
 
+    System.out.println("userRole : " + role);
+
     /*
     100000L 20000L 600000L 86400000L
     */

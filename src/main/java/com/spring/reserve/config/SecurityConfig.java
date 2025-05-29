@@ -86,12 +86,11 @@ public class SecurityConfig {
     http
             .authorizeHttpRequests((auth) -> auth
                     .requestMatchers(
-                            "/api/v1/user/login"
+                             "/"
+                            , "/join"
+                            ,"/api/v1/user/login"
                             ,"/api/v1/user/reIssueToken"
-                            ,  "/"
-                            , "/join").permitAll()
-                    .requestMatchers(
-                            "/api/v1/board/**"
+                            , "/api/v1/board/**"
                             , "/api/v1/board/detal/*"
                             , "/api/v1/comment/commentList"
                             , "/api/v1/user/userJoin"
