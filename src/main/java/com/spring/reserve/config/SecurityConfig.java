@@ -80,10 +80,8 @@ public class SecurityConfig {
     //csrf disable
     http.csrf((auth) -> auth.disable());
 
-    //From 로그인 방식 disable
     http.formLogin((auth) -> auth.disable());
 
-    //http basic 인증 방식 disable
     http.httpBasic((auth) -> auth.disable());
     http
             .authorizeHttpRequests((auth) -> auth
