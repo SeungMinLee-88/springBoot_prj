@@ -61,10 +61,10 @@ public class BoardServiceImpl implements BoardService {
       if(boardDTO.getFileList().length > 0) {
         for (MultipartFile boardFile : boardDTO.getFileList()) {
           String originalFilename = boardFile.getOriginalFilename();
-          String storedFileName = System.currentTimeMillis() + "_" + originalFilename; // 3.
+          String storedFileName = System.currentTimeMillis() + "_" + originalFilename;
           String savePath = "C:/Users/lsmls/IdeaProjects/springBoot_prj/attached/" + storedFileName;
           String mimeType = boardFile.getContentType().substring(0, boardFile.getContentType().indexOf("/"));
-          boardFile.transferTo(new File(savePath)); // 5.
+          boardFile.transferTo(new File(savePath));
           BoardFileEntity boardFileEntity = BoardFileEntity.toBoardFileEntity(board, originalFilename, storedFileName, mimeType);
           boardFileRepository.save(boardFileEntity);
         }
@@ -113,7 +113,6 @@ public class BoardServiceImpl implements BoardService {
   }
 
   @Override
-  @Transactional
   public List<BoardFileDTO> fileList(Long boardId) {
     List<BoardFileEntity> boardFileEntityList = boardFileRepository.findByBoardId(boardId);
         ModelMapper mapper = new ModelMapper();
@@ -123,6 +122,7 @@ public class BoardServiceImpl implements BoardService {
       return fileDTOList;
   }
 
+  @Override
   @Transactional
   public List<BoardFileDTO> fileDelete(Long fileId, Long boardId) {
     boardFileRepository.deleteById(fileId);
@@ -159,6 +159,7 @@ public class BoardServiceImpl implements BoardService {
   }
 
   @Override
+  @Transactional
   public void updateBoard(BoardDTO boardDTO) throws IOException {
 
     List<BoardFileEntity> boardFileEntityList = boardFileRepository.findByBoardId(boardDTO.getId());
