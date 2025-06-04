@@ -34,7 +34,7 @@ public class RestCommentController {
 
     @GetMapping("/commentList")
     @Transactional(readOnly = true)
-    public Page<CommentEntity> commentTrees(@PageableDefault(page = 1) Pageable pageable, @RequestParam Long boardId) {
+    public Page<CommentEntity> commentList(@PageableDefault(page = 1) Pageable pageable, @RequestParam Long boardId) {
         int page = pageable.getPageNumber() - 1;
         int pageLimit = 3;
 

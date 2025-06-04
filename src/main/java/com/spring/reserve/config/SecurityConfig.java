@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,7 +28,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import java.util.Collections;
 
 @Configuration
-/*@EnableWebSecurity(debug = true)*/
 @EnableWebSecurity
 public class SecurityConfig {
 
@@ -36,19 +37,27 @@ public class SecurityConfig {
   private final RoleRepository roleRepository;
   private final RoleUserRepository roleUserRepository;
   private final UserRepository userRepository;
+  private final AuthenticationManager authenticationManager;
 
-  public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, RefreshRepository refreshRepository, RoleRepository roleRepository, RoleUserRepository roleUserRepository, UserRepository userRepository) {
+  public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, RefreshRepository refreshRepository, RoleRepository roleRepository, RoleUserRepository roleUserRepository, UserRepository userRepository, AuthenticationManager authenticationManager) {
     this.authenticationConfiguration = authenticationConfiguration;
     this.jwtUtil = jwtUtil;
     this.refreshRepository = refreshRepository;
     this.roleRepository = roleRepository;
     this.roleUserRepository = roleUserRepository;
     this.userRepository = userRepository;
+      this.authenticationManager = authenticationManager;
   }
 
-  @Bean
+/*  @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
     return configuration.getAuthenticationManager();
+  }*/
+
+  @Bean
+  public AuthenticationManager authenticationManager() {
+
+    return new ProviderManager();
   }
 
   @Bean
@@ -90,7 +99,7 @@ public class SecurityConfig {
                             , "/join"
                             ,"/api/v1/user/login"
                             ,"/api/v1/user/reIssueToken"
-                            , "/api/v1/board/**"
+                            , "/api/v1/board/boardList"
                             , "/api/v1/board/detal/*"
                             , "/api/v1/comment/commentList"
                             , "/api/v1/user/userJoin"
@@ -98,10 +107,11 @@ public class SecurityConfig {
                     .requestMatchers("/api/v1/admin/*").hasAnyRole("ADMIN", "MANAGER")
                     .anyRequest().authenticated());
 
-    http.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+    http
+            .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
     http
-            .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository, roleUserRepository, userRepository), UsernamePasswordAuthenticationFilter.class);
+            .addFilterAt(new LoginFilter(authenticationManager, jwtUtil, refreshRepository, roleUserRepository, userRepository), UsernamePasswordAuthenticationFilter.class);
 
     http
             .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);

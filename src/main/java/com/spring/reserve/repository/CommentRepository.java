@@ -22,6 +22,6 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
   public List<CommentEntity> findAllSubCommentEntitysInRoot(@Param("rootIds") List<Long> rootIds);
 
   @Modifying
-  @Query(value = "update CommentEntity c set c.commentContents=:commentContents where c.id=:id") // 엔티티기준
+  @Query(value = "update CommentEntity c set c.commentContents=:commentContents where c.id=:id")
   public void updateCommentContents(String commentContents, Long id);
 }

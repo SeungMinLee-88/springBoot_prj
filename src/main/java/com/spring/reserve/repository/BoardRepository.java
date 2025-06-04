@@ -15,10 +15,10 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long>, JpaSp
   Page<BoardEntity> findAllboardWithParameterPagination(Pageable pageable, String sortfield, String wheretext);*/
 
   @Modifying
-  @Query(value = "update BoardEntity b set b.boardHits=b.boardHits+1 where b.id=:id") // 엔티티기준
+  @Query(value = "update BoardEntity b set b.boardHits=b.boardHits+1 where b.id=:id")
   void updateHits(@Param("id") Long id);
 
   @Modifying
-  @Query(value = "update BoardEntity b set b.fileAttached=0 where b.id=:id") // 엔티티기준
+  @Query(value = "update BoardEntity b set b.fileAttached=0 where b.id=:id")
   void updatefileAttached(@Param("id") Long id);
 }
