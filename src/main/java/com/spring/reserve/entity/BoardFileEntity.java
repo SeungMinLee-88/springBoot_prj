@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "board_file_table")
+@Table(name = "board_file")
 public class BoardFileEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

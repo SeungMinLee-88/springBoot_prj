@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface BoardFileRepository extends JpaRepository<BoardFileEntity, Long> {
 
-    @Query(value ="select * from board_file_table where board_id = :boardId"
-            , countQuery = "select count(*) from board_file_table where board_id = :boardId"
+    @Query(value ="select * from board_file where board_id = :boardId"
+            , countQuery = "select count(*) from board_file where board_id = :boardId"
             ,nativeQuery = true)
     List<BoardFileEntity> findByBoardId(long boardId);
 }
