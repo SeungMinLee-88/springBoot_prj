@@ -1,7 +1,6 @@
 package com.spring.reserve.config;
 
 import com.spring.reserve.component.JWTUtil;
-import com.spring.reserve.entity.UserEntity;
 import com.spring.reserve.filter.CustomLogoutFilter;
 import com.spring.reserve.filter.JWTFilter;
 import com.spring.reserve.filter.LoginFilter;
@@ -9,8 +8,6 @@ import com.spring.reserve.repository.RefreshRepository;
 import com.spring.reserve.repository.RoleRepository;
 import com.spring.reserve.repository.RoleUserRepository;
 import com.spring.reserve.repository.UserRepository;
-import com.spring.reserve.service.CustomUserDetails;
-import com.spring.reserve.service.CustomUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -19,12 +16,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.authentication.jaas.JaasAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -56,11 +51,6 @@ public class SecurityConfig {
     this.userRepository = userRepository;
   }
 
-/*  @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-    return configuration.getAuthenticationManager();
-  }*/
-
 
 
   @Bean
@@ -71,6 +61,7 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    System.out.println("call filterChain");
     http
             .cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
               @Override
@@ -88,8 +79,6 @@ public class SecurityConfig {
                 return configuration;
               }
             })));
-
-    System.out.println("call filterChain");
 
     //csrf disable
     http.csrf((auth) -> auth.disable());
@@ -116,7 +105,7 @@ public class SecurityConfig {
             .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
     http
-            .addFilterAt(new LoginFilter(jwtUtil, refreshRepository, roleUserRepository, userRepository), UsernamePasswordAuthenticationFilter.class);
+            .addFilterAt(new LoginFilter(authenticationConfiguration, jwtUtil, refreshRepository, roleUserRepository, userRepository), UsernamePasswordAuthenticationFilter.class);
 
     http
             .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);

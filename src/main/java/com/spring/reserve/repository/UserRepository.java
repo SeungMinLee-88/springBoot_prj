@@ -13,6 +13,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>, JpaSpec
 
   UserEntity findByLoginId(String loginId);
 
+  UserEntity findByLoginIdAndUserPassword(String loginId, String userPassword);
+
   @Query("SELECT u FROM UserEntity u LEFT JOIN FETCH u.roleUserEntities")
   Page<UserEntity> findAllWithRelated(Pageable pageable);
 

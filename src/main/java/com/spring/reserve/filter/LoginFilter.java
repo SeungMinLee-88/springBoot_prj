@@ -12,7 +12,6 @@ import com.spring.reserve.repository.RefreshRepository;
 import com.spring.reserve.repository.RoleRepository;
 import com.spring.reserve.repository.RoleUserRepository;
 import com.spring.reserve.repository.UserRepository;
-import com.spring.reserve.service.CustomUserDetails;
 import com.spring.reserve.service.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletInputStream;
@@ -28,11 +27,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.StreamUtils;
 
@@ -47,13 +49,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 
 
-/*  private final AuthenticationManager authenticationManager;*/
+  private final AuthenticationConfiguration authenticationConfiguration;
+
   private final RefreshRepository refreshRepository;
   private final JWTUtil jwtUtil;
   private final RoleUserRepository roleUserRepository;
   private final UserRepository userRepository;
 
-  public LoginFilter(JWTUtil jwtUtil, RefreshRepository refreshRepository, RoleUserRepository roleUserRepository, UserRepository userRepository) {
+  public LoginFilter(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, RefreshRepository refreshRepository, RoleUserRepository roleUserRepository, UserRepository userRepository) {
+    this.authenticationConfiguration = authenticationConfiguration;
     this.jwtUtil = jwtUtil;
     this.refreshRepository = refreshRepository;
     this.roleUserRepository = roleUserRepository;
@@ -62,18 +66,29 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
   }
 
+
   @Bean
-  public AuthenticationManager authenticationManager(String loginId) throws Exception {
-    System.out.println("call authenticationManager");
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+    System.out.println("configuration : " + configuration.getAuthenticationManager());
+    return configuration.getAuthenticationManager();
+  }
+
+  @Bean
+  public AuthenticationManager authenticationManager(
+          CustomUserDetailsService customUserDetailsService,
+          BCryptPasswordEncoder bCryptPasswordEncoder) {
     DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-
-    CustomUserDetailsService customUserDetailsService = new CustomUserDetailsService();
-
     authenticationProvider.setUserDetailsService(customUserDetailsService);
-    authenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
-    System.out.println("customUserDetailsService : " + customUserDetailsService);
+    authenticationProvider.setPasswordEncoder(bCryptPasswordEncoder);
+
     return new ProviderManager(authenticationProvider);
   }
+
+  @Bean
+  CustomUserDetailsService customUserDetailsService(){
+    return new CustomUserDetailsService();
+  }
+
   @Bean
   public BCryptPasswordEncoder bCryptPasswordEncoder() {
     return new BCryptPasswordEncoder();
@@ -135,14 +150,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginId, userPassword, updatedAuthorities);
 
+/*    authenticate(authToken);*/
+    System.out.println("authenticationConfiguration : " + authenticationConfiguration.toString());
       try {
-          authenticationManager(loginId);
+          return authenticationManager(customUserDetailsService(), bCryptPasswordEncoder()).authenticate(authToken);
       } catch (Exception e) {
           throw new RuntimeException(e);
       }
-
-      /*    authenticate(authToken);*/
-    return authenticate(authToken);
   }
 
   @Override
