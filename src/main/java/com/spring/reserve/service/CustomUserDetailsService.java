@@ -24,17 +24,10 @@ public class CustomUserDetailsService  implements UserDetailsService {
   @Autowired
   private RoleUserRepository roleUserRepository;
 
-
-  String lgoinId;
-
-  public CustomUserDetailsService() {
-
-  }
-
-
   @Override
   public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
     System.out.println("call loadUserByUsername");
+    System.out.println("call loadUserByUsername : " + loginId);
 
 
     UserEntity userEntity = userRepository.findByLoginId(loginId);

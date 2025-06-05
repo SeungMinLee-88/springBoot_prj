@@ -46,48 +46,23 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 
   private ObjectMapper objectMapper =  new ObjectMapper();
-
-
-
-  private final AuthenticationConfiguration authenticationConfiguration;
-
+  private final AuthenticationManager authenticationManager;
   private final RefreshRepository refreshRepository;
   private final JWTUtil jwtUtil;
   private final RoleUserRepository roleUserRepository;
   private final UserRepository userRepository;
 
-  public LoginFilter(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, RefreshRepository refreshRepository, RoleUserRepository roleUserRepository, UserRepository userRepository) {
-    this.authenticationConfiguration = authenticationConfiguration;
+  public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, RefreshRepository refreshRepository, RoleUserRepository roleUserRepository, UserRepository userRepository) {
+    this.authenticationManager = authenticationManager;
     this.jwtUtil = jwtUtil;
     this.refreshRepository = refreshRepository;
     this.roleUserRepository = roleUserRepository;
     this.userRepository = userRepository;
-    setFilterProcessesUrl("/api/v1/user/login");
+      setFilterProcessesUrl("/api/v1/user/login");
 
   }
 
 
-  @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-    System.out.println("configuration : " + configuration.getAuthenticationManager());
-    return configuration.getAuthenticationManager();
-  }
-
-  @Bean
-  public AuthenticationManager authenticationManager(
-          CustomUserDetailsService customUserDetailsService,
-          BCryptPasswordEncoder bCryptPasswordEncoder) {
-    DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-    authenticationProvider.setUserDetailsService(customUserDetailsService);
-    authenticationProvider.setPasswordEncoder(bCryptPasswordEncoder);
-
-    return new ProviderManager(authenticationProvider);
-  }
-
-  @Bean
-  CustomUserDetailsService customUserDetailsService(){
-    return new CustomUserDetailsService();
-  }
 
   @Bean
   public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -151,12 +126,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginId, userPassword, updatedAuthorities);
 
 /*    authenticate(authToken);*/
-    System.out.println("authenticationConfiguration : " + authenticationConfiguration.toString());
-      try {
-          return authenticationManager(customUserDetailsService(), bCryptPasswordEncoder()).authenticate(authToken);
-      } catch (Exception e) {
-          throw new RuntimeException(e);
-      }
+    BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    return authenticationManager.authenticate(authToken);
   }
 
   @Override

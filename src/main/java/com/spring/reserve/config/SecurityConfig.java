@@ -8,6 +8,7 @@ import com.spring.reserve.repository.RefreshRepository;
 import com.spring.reserve.repository.RoleRepository;
 import com.spring.reserve.repository.RoleUserRepository;
 import com.spring.reserve.repository.UserRepository;
+import com.spring.reserve.service.CustomUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -36,21 +37,39 @@ import java.util.List;
 public class SecurityConfig {
 
   private final AuthenticationConfiguration authenticationConfiguration;
+/*  @Autowired
+  private final AuthenticationManager authenticationManager;*/
   private final JWTUtil jwtUtil;
   private final RefreshRepository refreshRepository;
   private final RoleRepository roleRepository;
   private final RoleUserRepository roleUserRepository;
   private final UserRepository userRepository;
+  private final CustomUserDetailsService customUserDetailsService;
 
-  public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, RefreshRepository refreshRepository, RoleRepository roleRepository, RoleUserRepository roleUserRepository, UserRepository userRepository) {
+  public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, RefreshRepository refreshRepository, RoleRepository roleRepository, RoleUserRepository roleUserRepository, UserRepository userRepository, CustomUserDetailsService customUserDetailsService) {
     this.authenticationConfiguration = authenticationConfiguration;
-    this.jwtUtil = jwtUtil;
+      this.jwtUtil = jwtUtil;
     this.refreshRepository = refreshRepository;
     this.roleRepository = roleRepository;
     this.roleUserRepository = roleUserRepository;
     this.userRepository = userRepository;
+      this.customUserDetailsService = customUserDetailsService;
   }
+/*  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+    System.out.println("configuration : " + configuration.getAuthenticationManager());
+    return configuration.getAuthenticationManager();
+  }*/
 
+  @Bean
+  public AuthenticationManager authenticationManager(
+          BCryptPasswordEncoder bCryptPasswordEncoder) {
+    DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+    System.out.println("customUserDetailsService : " + customUserDetailsService);
+    authenticationProvider.setUserDetailsService(customUserDetailsService);
+    authenticationProvider.setPasswordEncoder(bCryptPasswordEncoder);
+    return new ProviderManager(authenticationProvider);
+  }
 
 
   @Bean
@@ -105,7 +124,7 @@ public class SecurityConfig {
             .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
     http
-            .addFilterAt(new LoginFilter(authenticationConfiguration, jwtUtil, refreshRepository, roleUserRepository, userRepository), UsernamePasswordAuthenticationFilter.class);
+            .addFilterAt(new LoginFilter(authenticationManager(bCryptPasswordEncoder()), jwtUtil, refreshRepository, roleUserRepository, userRepository), UsernamePasswordAuthenticationFilter.class);
 
     http
             .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
