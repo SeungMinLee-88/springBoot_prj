@@ -58,7 +58,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     this.refreshRepository = refreshRepository;
     this.roleUserRepository = roleUserRepository;
     this.userRepository = userRepository;
-      setFilterProcessesUrl("/api/v1/user/login");
+    setFilterProcessesUrl("/api/v1/user/login");
 
   }
 
