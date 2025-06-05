@@ -19,14 +19,19 @@ import java.util.List;
 public class CustomUserDetailsService  implements UserDetailsService {
 
 
+
   @Autowired
   private UserRepository userRepository;
+
   @Autowired
   private RoleUserRepository roleUserRepository;
 
 
-  @Override
+
+
+    @Override
   public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
+    System.out.println("call loadUserByUsername");
 
     UserEntity userEntity = userRepository.findByLoginId(loginId);
 

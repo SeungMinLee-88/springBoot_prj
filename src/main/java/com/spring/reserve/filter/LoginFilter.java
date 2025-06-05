@@ -12,6 +12,8 @@ import com.spring.reserve.repository.RefreshRepository;
 import com.spring.reserve.repository.RoleRepository;
 import com.spring.reserve.repository.RoleUserRepository;
 import com.spring.reserve.repository.UserRepository;
+import com.spring.reserve.service.CustomUserDetails;
+import com.spring.reserve.service.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.Cookie;
@@ -20,13 +22,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.StreamUtils;
 
@@ -40,20 +46,42 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
   private ObjectMapper objectMapper =  new ObjectMapper();
 
 
-  private final AuthenticationManager authenticationManager;
+
+/*  private final AuthenticationManager authenticationManager;*/
   private final RefreshRepository refreshRepository;
   private final JWTUtil jwtUtil;
   private final RoleUserRepository roleUserRepository;
   private final UserRepository userRepository;
 
-  public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, RefreshRepository refreshRepository, RoleUserRepository roleUserRepository, UserRepository userRepository) {
-    this.authenticationManager = authenticationManager;
+  public LoginFilter(JWTUtil jwtUtil, RefreshRepository refreshRepository, RoleUserRepository roleUserRepository, UserRepository userRepository) {
     this.jwtUtil = jwtUtil;
     this.refreshRepository = refreshRepository;
     this.roleUserRepository = roleUserRepository;
     this.userRepository = userRepository;
     setFilterProcessesUrl("/api/v1/user/login");
 
+  }
+
+  @Bean
+  public AuthenticationManager authenticationManager(String loginId) throws Exception {
+    System.out.println("call authenticationManager");
+    DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+
+    CustomUserDetailsService customUserDetailsService = new CustomUserDetailsService();
+
+    authenticationProvider.setUserDetailsService(customUserDetailsService);
+    authenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
+    System.out.println("customUserDetailsService : " + customUserDetailsService);
+    return new ProviderManager(authenticationProvider);
+  }
+  @Bean
+  public BCryptPasswordEncoder bCryptPasswordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+
+
+  public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    return null;
   }
 
   @Override
@@ -81,6 +109,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
       userPassword = userDto.getUserPassword();
       ModelMapper mapper = new ModelMapper();
 
+      System.out.println("loginId : " + loginId);
+      System.out.println("userPassword : " + userPassword);
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }
@@ -105,7 +135,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginId, userPassword, updatedAuthorities);
 
-    return authenticationManager.authenticate(authToken);
+      try {
+          authenticationManager(loginId);
+      } catch (Exception e) {
+          throw new RuntimeException(e);
+      }
+
+      /*    authenticate(authToken);*/
+    return authenticate(authToken);
   }
 
   @Override

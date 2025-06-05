@@ -1,6 +1,7 @@
 package com.spring.reserve.config;
 
 import com.spring.reserve.component.JWTUtil;
+import com.spring.reserve.entity.UserEntity;
 import com.spring.reserve.filter.CustomLogoutFilter;
 import com.spring.reserve.filter.JWTFilter;
 import com.spring.reserve.filter.LoginFilter;
@@ -8,16 +9,22 @@ import com.spring.reserve.repository.RefreshRepository;
 import com.spring.reserve.repository.RoleRepository;
 import com.spring.reserve.repository.RoleUserRepository;
 import com.spring.reserve.repository.UserRepository;
+import com.spring.reserve.service.CustomUserDetails;
+import com.spring.reserve.service.CustomUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.jaas.JaasAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -25,7 +32,9 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -37,16 +46,14 @@ public class SecurityConfig {
   private final RoleRepository roleRepository;
   private final RoleUserRepository roleUserRepository;
   private final UserRepository userRepository;
-  private final AuthenticationManager authenticationManager;
 
-  public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, RefreshRepository refreshRepository, RoleRepository roleRepository, RoleUserRepository roleUserRepository, UserRepository userRepository, AuthenticationManager authenticationManager) {
+  public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, RefreshRepository refreshRepository, RoleRepository roleRepository, RoleUserRepository roleUserRepository, UserRepository userRepository) {
     this.authenticationConfiguration = authenticationConfiguration;
     this.jwtUtil = jwtUtil;
     this.refreshRepository = refreshRepository;
     this.roleRepository = roleRepository;
     this.roleUserRepository = roleUserRepository;
     this.userRepository = userRepository;
-      this.authenticationManager = authenticationManager;
   }
 
 /*  @Bean
@@ -54,11 +61,7 @@ public class SecurityConfig {
     return configuration.getAuthenticationManager();
   }*/
 
-  @Bean
-  public AuthenticationManager authenticationManager() {
 
-    return new ProviderManager();
-  }
 
   @Bean
   public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -86,6 +89,8 @@ public class SecurityConfig {
               }
             })));
 
+    System.out.println("call filterChain");
+
     //csrf disable
     http.csrf((auth) -> auth.disable());
 
@@ -111,7 +116,7 @@ public class SecurityConfig {
             .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
     http
-            .addFilterAt(new LoginFilter(authenticationManager, jwtUtil, refreshRepository, roleUserRepository, userRepository), UsernamePasswordAuthenticationFilter.class);
+            .addFilterAt(new LoginFilter(jwtUtil, refreshRepository, roleUserRepository, userRepository), UsernamePasswordAuthenticationFilter.class);
 
     http
             .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
