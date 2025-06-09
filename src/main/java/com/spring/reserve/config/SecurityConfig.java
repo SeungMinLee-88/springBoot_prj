@@ -114,6 +114,7 @@ public class SecurityConfig {
                             , "/api/v1/board/list"
                             , "/api/v1/board/boardList"
                             , "/api/v1/board/detail/*"
+                            , "/api/v1/board/download/*"
                             , "/api/v1/comment/commentList"
                             , "/api/v1/user/userJoin"
                             , "/error").permitAll()
