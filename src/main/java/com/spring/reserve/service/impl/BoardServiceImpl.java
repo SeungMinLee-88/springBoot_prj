@@ -93,7 +93,6 @@ public class BoardServiceImpl implements BoardService {
   }
 
   @Override
-  @Transactional
   public BoardDTO boardDetail(Long id) {
     Optional<BoardEntity> optionalBoardEntity = boardRepository.findById(id);
     if (optionalBoardEntity.isPresent()) {
@@ -208,7 +207,6 @@ public class BoardServiceImpl implements BoardService {
     //int pageLimit = 3;
 
     Specification<BoardEntity> specification = new BoardSpecification(new SearchCriteria(params.get("searchKey"), params.get("searchValue")));
-    /*Page<BoardEntity> boardEntities = boardRepository.findAll(specification, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));*/
     Page<BoardEntity> boardEntities = boardRepository.findAll(specification, PageRequest.of(page, pageable.getPageSize(), pageable.getSort()));
 
     Page<BoardDTO> boardDTOList = boardEntities.map(board -> new BoardDTO(board.getId(), board.getBoardWriter(), board.getBoardTitle(), board.getBoardHits(), board.getCreatedTime()));

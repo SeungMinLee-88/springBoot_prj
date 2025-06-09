@@ -7,7 +7,6 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-// DB의 테이블 역할을 하는 클래스
 @Entity
 @Getter
 /*@Setter*/

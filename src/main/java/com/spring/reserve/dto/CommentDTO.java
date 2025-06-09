@@ -10,7 +10,6 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class CommentDTO extends BaseEntity {
   private Long id;
   private String commentWriter;

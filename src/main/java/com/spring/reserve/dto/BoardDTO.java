@@ -9,10 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class BoardDTO {
   private Long id;
   private String boardWriter;
@@ -42,27 +39,12 @@ public class BoardDTO {
     BoardDTO boardDTO = new BoardDTO();
     boardDTO.setId(boardEntity.getId());
     boardDTO.setBoardWriter(boardEntity.getBoardWriter());
-/*    boardDTO.setBoardPass(boardEntity.getBoardPass());*/
     boardDTO.setBoardTitle(boardEntity.getBoardTitle());
     boardDTO.setBoardContents(boardEntity.getBoardContents());
     boardDTO.setBoardHits(boardEntity.getBoardHits());
     boardDTO.setBoardCreatedTime(boardEntity.getCreatedTime());
     boardDTO.setBoardUpdatedTime(boardEntity.getUpdatedTime());
-    if (boardEntity.getFileAttached() == 0) {
-      boardDTO.setFileAttached(boardEntity.getFileAttached()); // 0
-    } else {
-      boardDTO.setFileAttached(boardEntity.getFileAttached());
-/*      List<String> originalFileNameList = new ArrayList<>();
-      List<String> storedFileNameList = new ArrayList<>();
-      boardDTO.setFileAttached(boardEntity.getFileAttached()); // 1
-      for (BoardFileEntity boardFileEntity : boardEntity.getBoardFileEntityList()){
-        originalFileNameList.add(boardFileEntity.getOriginalFileName());
-        storedFileNameList.add(boardFileEntity.getStoredFileName());
-      }
-      boardDTO.setOriginalFileName(originalFileNameList);
-      boardDTO.setStoredFileName(storedFileNameList);*/
-    }
-
+    boardDTO.setFileAttached(boardEntity.getFileAttached());
     return boardDTO;
   }
 }

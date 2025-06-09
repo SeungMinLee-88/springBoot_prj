@@ -111,8 +111,9 @@ public class SecurityConfig {
                             , "/join"
                             ,"/api/v1/user/login"
                             ,"/api/v1/user/reIssueToken"
+                            , "/api/v1/board/list"
                             , "/api/v1/board/boardList"
-                            , "/api/v1/board/detal/*"
+                            , "/api/v1/board/detail/*"
                             , "/api/v1/comment/commentList"
                             , "/api/v1/user/userJoin"
                             , "/error").permitAll()

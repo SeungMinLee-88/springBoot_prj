@@ -8,10 +8,8 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-// DB의 테이블 역할을 하는 클래스
 @Entity
 @Getter
-/*@Setter*/
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -53,20 +51,19 @@ public class BoardEntity extends BaseEntity {
             .boardWriter(boardDTO.getBoardWriter())
             .boardTitle(boardDTO.getBoardTitle())
             .boardContents(boardDTO.getBoardContents())
-            .fileAttached(boardDTO.getFileAttached()) // 파일 있음.
+            .fileAttached(boardDTO.getFileAttached())
             .boardHits(0)
             .build();
   }
 
   public static BoardEntity toUpdateEntity(BoardDTO boardDTO) {
-
     return BoardEntity.builder()
             .id(boardDTO.getId())
             .boardWriter(boardDTO.getBoardWriter())
             .boardTitle(boardDTO.getBoardTitle())
             .boardContents(boardDTO.getBoardContents())
             .boardHits(boardDTO.getBoardHits())
-            .fileAttached(boardDTO.getFileAttached()) // 파일 있음.
+            .fileAttached(boardDTO.getFileAttached())
             .build();
   }
 
