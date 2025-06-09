@@ -59,15 +59,17 @@ public class ReissueController {
         if (!isExist) {
             return new ResponseEntity<>("invalid refresh token", HttpStatus.BAD_REQUEST);
         }
-
+/*
+    100000L 20000L 600000L 86400000L
+    */
         String username = jwtUtil.getUsername(refresh);
         List<String> role = jwtUtil.getRole(refresh);
 
-        String newAccess = jwtUtil.createJwt("access", username, role, 10000L);
-        String newRefresh = jwtUtil.createJwt("refresh", username, role, 20000L);
+        String newAccess = jwtUtil.createJwt("access", username, role, 600000L);
+        String newRefresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
 
         refreshRepository.deleteByRefresh(refresh);
-        addRefreshEntity(username, newRefresh, 600000L);
+        addRefreshEntity(username, newRefresh, 86400000L);
 
         response.setHeader("access", newAccess);
         response.addCookie(createCookie("refresh", newRefresh));

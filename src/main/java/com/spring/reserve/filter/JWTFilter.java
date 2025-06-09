@@ -72,8 +72,6 @@ public class JWTFilter extends OncePerRequestFilter {
     userRoles = userRole;
 
     CustomUserDetails customUserDetails = new CustomUserDetails(userEntity, userRoles);
-    System.out.println("customUserDetails getUsername : " + customUserDetails.getUsername());
-    System.out.println("customUserDetails getAuthorities : " + customUserDetails.getAuthorities());
 
     Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
     SecurityContextHolder.getContext().setAuthentication(authToken);

@@ -65,7 +65,6 @@ public class SecurityConfig {
   public AuthenticationManager authenticationManager(
           BCryptPasswordEncoder bCryptPasswordEncoder) {
     DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-    System.out.println("customUserDetailsService : " + customUserDetailsService);
     authenticationProvider.setUserDetailsService(customUserDetailsService);
     authenticationProvider.setPasswordEncoder(bCryptPasswordEncoder);
     return new ProviderManager(authenticationProvider);

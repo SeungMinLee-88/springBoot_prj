@@ -125,8 +125,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginId, userPassword, updatedAuthorities);
 
-/*    authenticate(authToken);*/
-    BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     return authenticationManager.authenticate(authToken);
   }
 
@@ -146,9 +144,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     while ( iterator.hasNext()){
       role.add(String.valueOf(iterator.next()));
     }
-
-    System.out.println("userRole : " + role);
-
     /*
     100000L 20000L 600000L 86400000L
     */
