@@ -36,6 +36,7 @@ public class CommentEntity extends BaseEntity {
   @JoinColumn(name = "user_id")
   @JsonIgnore
   private UserEntity userEntity;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "parent_comment_id")
   @JsonIgnore

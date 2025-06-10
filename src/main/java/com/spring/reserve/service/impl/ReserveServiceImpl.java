@@ -29,8 +29,6 @@ public class ReserveServiceImpl implements ReserveService {
 
     @Override
     public ReserveDTO reserveSave(ReserveDTO reserveDTO){
-
-
         Optional<UserEntity> optionalUserEntity = Optional.ofNullable(userRepository.findByLoginId(reserveDTO.getReserveUserId()));
         Optional<HallEntity> optionalHallEntity = hallRepository.findById(reserveDTO.getHallId());
         if (optionalUserEntity.isPresent() && optionalHallEntity.isPresent()) {
@@ -93,9 +91,7 @@ public class ReserveServiceImpl implements ReserveService {
         ModelMapper mapper = new ModelMapper();
         List<ReserveDTO> reserveDTOList  = mapper.map(reserveEntityList, new TypeToken<List<ReserveDTO>>(){}.getType());
 
-        List<ReserveDTO> reserveDTOList2 = mapper.map(reserveEntityList, new TypeToken<List<ReserveDTO>>(){}.getType());
-
-        return reserveDTOList2;
+        return reserveDTOList;
     }
 
     @Override
