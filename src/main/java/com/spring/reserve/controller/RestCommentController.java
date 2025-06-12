@@ -76,7 +76,6 @@ public class RestCommentController {
         return ResponseEntity.status(HttpStatus.OK).body("save success");
     }
 
-    @Transactional
     @PostMapping("/commentUpdate")
     public ResponseEntity<String> commentUpdate(@RequestBody CommentDTO commentDTO) {
         CommentEntity updateCommentEntity = CommentEntity.toUpdateEntity(commentDTO);

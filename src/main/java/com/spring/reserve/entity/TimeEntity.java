@@ -1,6 +1,9 @@
 package com.spring.reserve.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Null;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -18,7 +21,7 @@ public class TimeEntity{
   private Long id;
 
   private String time;
-
+  
   private int reserved;
 
   private String reserveUserId;
