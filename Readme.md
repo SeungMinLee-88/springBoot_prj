@@ -1033,5 +1033,5 @@ public interface ReserveRepository extends JpaRepository<ReserveEntity, Long> {
 ## 5. 기타사항
 Spring Boot와 Spring Data 라이브러리의 모듈을 통해 프로젝트를 구현 해보았으며 일반적인 세션기반 CRUD 게시판 프로젝트의 내용은 해당 문서에서 설명하지 않았으며 생성자 패턴, ORM 기반 구현 등도 사용자, 게시판, 코멘트, 예약의 내용에 중복되어 구현 되었기에 특이 사항만 기술 하였다. 프로젝트의 프론트 부분은 Next.js 기반으로 구축하여 상세한 기능에 대해서는 아래 URL을 통해 확인이 가능하다.
 
-- GithHub Url :
+- Next.js 프로젝트 GithHub Url :
   <https://github.com/SeungMinLee-88/nextjs_prj>
